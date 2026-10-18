@@ -1,0 +1,25 @@
+{
+  "name": "ans-terminologies",
+  "owner": {
+    "name": "Agence du Numérique en Santé",
+    "url": "https://esante.gouv.fr"
+  },
+  "metadata": {
+    "description": "Plugins de l'ANS pour Claude.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "serveur-mcp-api-fhir-smt",
+      "source": "./",
+      "description": "Terminologies de santé du SMT via son API FHIR, avec des skills d'exploration et d'expertise en français.",
+      "version": "0.1.0",
+      "category": "healthcare",
+      "keywords": [
+        "fhir",
+        "terminologie",
+        "smt"
+      ]
+    }
+  ]
+}

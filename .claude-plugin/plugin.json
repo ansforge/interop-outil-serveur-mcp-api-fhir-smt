@@ -1,0 +1,28 @@
+{
+  "name": "serveur-mcp-api-fhir-smt",
+  "version": "0.1.0",
+  "description": "Terminologies de santé du Serveur Multi-Terminologies (SMT) de l'ANS via son API FHIR : recherche, consultation, validation, hiérarchies, jeux de valeurs et alignements (CIM-10, CCAM, LOINC, SNOMED CT, NOS…).",
+  "author": {
+    "name": "Agence du Numérique en Santé",
+    "url": "https://esante.gouv.fr"
+  },
+  "homepage": "https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt",
+  "repository": "https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt",
+  "license": "MIT",
+  "keywords": [
+    "fhir",
+    "terminologie",
+    "smt"
+  ],
+  "mcpServers": {
+    "smt": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt",
+        "serveur-mcp-api-fhir-smt"
+      ]
+    }
+  }
+}

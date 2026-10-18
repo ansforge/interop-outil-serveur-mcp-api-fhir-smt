@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "smt": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "serveur-mcp-api-fhir-smt",
+        "--log-level",
+        "DEBUG"
+      ]
+    }
+  }
+}
