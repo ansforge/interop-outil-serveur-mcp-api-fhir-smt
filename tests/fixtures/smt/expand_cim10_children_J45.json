@@ -1,0 +1,47 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "ValueSet",
+    "expansion": {
+      "identifier": "urn:uuid:be49ab8e-c90e-4e2c-9c65-860de5c995df",
+      "timestamp": "2026-10-13T13:27:27+02:00",
+      "total": 4,
+      "parameter": [
+        {
+          "name": "used-codesystem",
+          "valueUri": "https://smt.esante.gouv.fr/terminologie-cim-10|2025-01-01"
+        },
+        {
+          "name": "version",
+          "valueUri": "https://smt.esante.gouv.fr/terminologie-cim-10|2025-01-01"
+        },
+        {
+          "name": "count",
+          "valueInteger": 50
+        }
+      ],
+      "contains": [
+        {
+          "system": "https://smt.esante.gouv.fr/terminologie-cim-10",
+          "code": "J45.8",
+          "display": "Asthme associé"
+        },
+        {
+          "system": "https://smt.esante.gouv.fr/terminologie-cim-10",
+          "code": "J45.1",
+          "display": "Asthme non allergique"
+        },
+        {
+          "system": "https://smt.esante.gouv.fr/terminologie-cim-10",
+          "code": "J45.0",
+          "display": "Asthme à prédominance allergique"
+        },
+        {
+          "system": "https://smt.esante.gouv.fr/terminologie-cim-10",
+          "code": "J45.9",
+          "display": "Asthme, sans précision"
+        }
+      ]
+    }
+  }
+}

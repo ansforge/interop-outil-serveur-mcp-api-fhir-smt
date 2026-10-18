@@ -1,0 +1,62 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "result",
+        "valueBoolean": false
+      },
+      {
+        "name": "code",
+        "valueCode": "J45.0"
+      },
+      {
+        "name": "system",
+        "valueUri": "https://smt.esante.gouv.fr/terminologie-cim-10"
+      },
+      {
+        "name": "version",
+        "valueString": "2025-01-01"
+      },
+      {
+        "name": "display",
+        "valueString": "Asthme à prédominance allergique"
+      },
+      {
+        "name": "issues",
+        "resource": {
+          "resourceType": "OperationOutcome",
+          "issue": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                  "valueString": "Display_Name_for__should_be_one_of__instead_of"
+                }
+              ],
+              "severity": "error",
+              "code": "invalid",
+              "details": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                    "code": "invalid-display"
+                  }
+                ],
+                "text": "Wrong Display Name 'Foo' for https://smt.esante.gouv.fr/terminologie-cim-10#J45.0. Valid display is 'Asthme à prédominance allergique' (for the language(s) '--')"
+              },
+              "expression": [
+                "display"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "message",
+        "valueString": "Wrong Display Name 'Foo' for https://smt.esante.gouv.fr/terminologie-cim-10#J45.0. Valid display is 'Asthme à prédominance allergique' (for the language(s) '--')"
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "status_code": 404,
+  "body": {
+    "resourceType": "OperationOutcome",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "not-found",
+        "details": {
+          "text": "[b294d59d-b756-4abf-bf33-b9fbe4bddc41]: A usable code system with URL https://example.org/inconnu could not be resolved."
+        },
+        "diagnostics": "[b294d59d-b756-4abf-bf33-b9fbe4bddc41]: A usable code system with URL https://example.org/inconnu could not be resolved."
+      },
+      {
+        "severity": "information",
+        "code": "informational",
+        "diagnostics": "X-Request-Id: 270d4034-9937-45fc-9bc9-a6396be68aa6"
+      }
+    ]
+  }
+}

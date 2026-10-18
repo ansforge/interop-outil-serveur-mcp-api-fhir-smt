@@ -1,0 +1,33 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "result",
+        "valueBoolean": true
+      },
+      {
+        "name": "match",
+        "part": [
+          {
+            "name": "equivalence",
+            "valueCode": "equivalent"
+          },
+          {
+            "name": "concept",
+            "valueCoding": {
+              "system": "https://smt.esante.gouv.fr/terminologie-atc",
+              "code": "J07BF01",
+              "display": "poliomyélite, virus vivant monovalent atténué oral"
+            }
+          },
+          {
+            "name": "source",
+            "valueString": "https://smt.esante.gouv.fr/fhir/ConceptMap/alignement-nuva-atc"
+          }
+        ]
+      }
+    ]
+  }
+}

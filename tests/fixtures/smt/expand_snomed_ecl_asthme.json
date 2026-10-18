@@ -1,0 +1,53 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "ValueSet",
+    "url": "http://snomed.info/sct/11000315107/version/20260621?fhir_vs=ecl%2F%3C%3C195967001",
+    "name": "SNOMED CT ECL expression",
+    "status": "active",
+    "experimental": false,
+    "copyright": "This value set includes content from SNOMED CT, which is copyright © 2002+ International Health Terminology Standards Development Organisation (IHTSDO), and distributed by agreement between IHTSDO and HL7. Implementer use of SNOMED CT is not covered by this agreement",
+    "expansion": {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/valueset-unclosed",
+          "valueBoolean": true
+        }
+      ],
+      "identifier": "urn:uuid:a1a6cd40-23a3-45bb-9c9e-37b53124a24a",
+      "timestamp": "2026-10-13T13:27:27+02:00",
+      "total": 128,
+      "parameter": [
+        {
+          "name": "used-codesystem",
+          "valueUri": "http://snomed.info/sct|http://snomed.info/sct/11000315107/version/20260621"
+        },
+        {
+          "name": "version",
+          "valueUri": "http://snomed.info/sct|http://snomed.info/sct/11000315107/version/20260621"
+        },
+        {
+          "name": "count",
+          "valueInteger": 3
+        }
+      ],
+      "contains": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "233688007",
+          "display": "asthme induit par les sulfites"
+        },
+        {
+          "system": "http://snomed.info/sct",
+          "code": "370220003",
+          "display": "asthme occasionnel"
+        },
+        {
+          "system": "http://snomed.info/sct",
+          "code": "1388496004",
+          "display": "Difficult-to-treat asthma"
+        }
+      ]
+    }
+  }
+}

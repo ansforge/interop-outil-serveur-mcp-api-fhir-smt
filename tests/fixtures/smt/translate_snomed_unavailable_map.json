@@ -1,0 +1,21 @@
+{
+  "status_code": 404,
+  "body": {
+    "resourceType": "OperationOutcome",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "not-found",
+        "details": {
+          "text": "[8657c4d7-b9a7-40cb-aeca-4997814a995f]: Unable to find ConceptMap with URI http://snomed.info/sct?fhir_cm=900000000000528000"
+        },
+        "diagnostics": "[8657c4d7-b9a7-40cb-aeca-4997814a995f]: Unable to find ConceptMap with URI http://snomed.info/sct?fhir_cm=900000000000528000"
+      },
+      {
+        "severity": "information",
+        "code": "informational",
+        "diagnostics": "X-Request-Id: 0e4d63fc-549a-461f-81a0-0fd50fad7e16"
+      }
+    ]
+  }
+}

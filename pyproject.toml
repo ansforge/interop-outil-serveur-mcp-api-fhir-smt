@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "serveur-mcp-api-fhir-smt"
+version = "0.1.0"
+description = "Serveur MCP d'accès aux API FHIR du Serveur Multi-Terminologies (SMT)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Agence du Numérique en Santé" }]
+dependencies = ["httpx>=0.27.0", "mcp>=2.3,<3", "pydantic>=2.8.0"]
+
+[dependency-groups]
+dev = ["mypy>=1.11.2", "pre-commit>=3.8.0", "pytest>=8.3.0", "ruff>=0.6.9"]
+
+[project.scripts]
+serveur-mcp-api-fhir-smt = "serveur_mcp_api_fhir_smt.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/serveur_mcp_api_fhir_smt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not integration'"
+markers = ["integration: tests qui interrogent l'API FHIR réelle du SMT"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# La longueur du code est assurée par `ruff format` ; seules les chaînes longues
+# (descriptions d'outils, messages) peuvent dépasser
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true

@@ -1,0 +1,33 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "result",
+        "valueBoolean": true
+      },
+      {
+        "name": "match",
+        "part": [
+          {
+            "name": "equivalence",
+            "valueCode": "equivalent"
+          },
+          {
+            "name": "concept",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "443165006",
+              "display": "fracture ostéoporotique"
+            }
+          },
+          {
+            "name": "source",
+            "valueString": "http://snomed.info/sct/11000315107/version/20260621?fhir_cm=900000000000526001"
+          }
+        ]
+      }
+    ]
+  }
+}

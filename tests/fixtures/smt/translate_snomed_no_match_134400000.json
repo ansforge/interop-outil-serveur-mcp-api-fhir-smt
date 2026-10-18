@@ -1,0 +1,16 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "result",
+        "valueBoolean": false
+      },
+      {
+        "name": "message",
+        "valueString": "No mappings could be found for 134400000 (http://snomed.info/sct)"
+      }
+    ]
+  }
+}

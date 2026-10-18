@@ -1,0 +1,21 @@
+{
+  "status_code": 404,
+  "body": {
+    "resourceType": "OperationOutcome",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "not-found",
+        "details": {
+          "text": "[63a94b82-1c3b-4da3-b865-c5622e791f12]: The code 1 (http://snomed.info/sct:http://snomed.info/sct/11000315107/version/20260621) was not found."
+        },
+        "diagnostics": "[63a94b82-1c3b-4da3-b865-c5622e791f12]: The code 1 (http://snomed.info/sct:http://snomed.info/sct/11000315107/version/20260621) was not found."
+      },
+      {
+        "severity": "information",
+        "code": "informational",
+        "diagnostics": "X-Request-Id: 940e5c82-8261-4bb7-b570-99aa677f2aa3"
+      }
+    ]
+  }
+}

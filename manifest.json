@@ -1,0 +1,39 @@
+{
+  "manifest_version": "0.3",
+  "name": "serveur-mcp-api-fhir-smt",
+  "display_name": "Terminologies SMT (ANS)",
+  "version": "0.1.0",
+  "description": "Accès aux terminologies de santé du Serveur Multi-Terminologies de l'ANS via son API FHIR.",
+  "author": {
+    "name": "Agence du Numérique en Santé",
+    "url": "https://esante.gouv.fr"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt",
+  "documentation": "https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt/blob/main/README.md",
+  "support": "https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt"
+  },
+  "tools_generated": true,
+  "keywords": [
+    "fhir",
+    "terminologie",
+    "smt"
+  ],
+  "server": {
+    "type": "python",
+    "entry_point": "src/serveur_mcp_api_fhir_smt/__main__.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "${__dirname}",
+        "serveur-mcp-api-fhir-smt"
+      ],
+      "env": {}
+    }
+  }
+}

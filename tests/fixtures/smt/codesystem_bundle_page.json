@@ -1,0 +1,105 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Bundle",
+    "id": "\"1791886657693\"",
+    "meta": {
+      "lastUpdated": "2026-10-13T13:27:27.214+02:00"
+    },
+    "type": "searchset",
+    "total": 358,
+    "link": [
+      {
+        "relation": "self",
+        "url": "https://smt.esante.gouv.fr/fhir/CodeSystem?_count=3&_elements=url%2Cversion%2Cname%2Ctitle%2Cstatus%2Ccontent%2Ccount"
+      },
+      {
+        "relation": "next",
+        "url": "https://smt.esante.gouv.fr/fhir?_getpages=W%2F%221791886657693%22&_getpagesoffset=3&_count=3&_bundletype=searchset&_elements=content,count,name,status,title,url,version"
+      }
+    ],
+    "entry": [
+      {
+        "fullUrl": "https://smt.esante.gouv.fr/fhir/CodeSystem/concept-properties",
+        "resource": {
+          "resourceType": "CodeSystem",
+          "id": "concept-properties",
+          "meta": {
+            "versionId": "2",
+            "lastUpdated": "2026-06-29T11:13:29.833+02:00",
+            "profile": [
+              "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
+            ],
+            "tag": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationValue",
+                "code": "SUBSETTED",
+                "display": "Resource encoded in summary mode"
+              }
+            ]
+          },
+          "url": "https://smt.esante.gouv.fr/fhir/concept-properties",
+          "version": "20260629120000",
+          "name": "ConceptProperties",
+          "title": "Concept Properties",
+          "status": "active",
+          "content": "complete",
+          "count": 37
+        }
+      },
+      {
+        "fullUrl": "https://smt.esante.gouv.fr/fhir/CodeSystem/terminologie-icf",
+        "resource": {
+          "resourceType": "CodeSystem",
+          "id": "terminologie-icf",
+          "meta": {
+            "versionId": "3",
+            "lastUpdated": "2026-07-13T08:56:16.899+02:00",
+            "tag": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationValue",
+                "code": "SUBSETTED",
+                "display": "Resource encoded in summary mode"
+              }
+            ]
+          },
+          "url": "https://smt.esante.gouv.fr/terminologie-icf",
+          "version": "2026-01",
+          "name": "Classification_internationale_du_fonctionnement_du_handicap_et_de_la_sante_ICF",
+          "title": "Classification internationale du fonctionnement, du handicap et de la santé",
+          "status": "active",
+          "content": "complete",
+          "count": 1663
+        }
+      },
+      {
+        "fullUrl": "https://smt.esante.gouv.fr/fhir/CodeSystem/terminologie-nabm",
+        "resource": {
+          "resourceType": "CodeSystem",
+          "id": "terminologie-nabm",
+          "meta": {
+            "versionId": "19",
+            "lastUpdated": "2026-08-07T11:17:48.349+02:00",
+            "profile": [
+              "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
+            ],
+            "tag": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationValue",
+                "code": "SUBSETTED",
+                "display": "Resource encoded in summary mode"
+              }
+            ]
+          },
+          "url": "https://smt.esante.gouv.fr/terminologie-nabm",
+          "version": "V105",
+          "name": "NABM",
+          "title": "Nomenclature des actes de biologie médicale",
+          "status": "active",
+          "content": "complete",
+          "count": 1050
+        }
+      }
+    ]
+  }
+}

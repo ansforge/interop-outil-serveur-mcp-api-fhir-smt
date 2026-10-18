@@ -1,0 +1,126 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "code",
+        "valueCode": "J45"
+      },
+      {
+        "name": "display",
+        "valueString": "Asthme"
+      },
+      {
+        "name": "name",
+        "valueString": "CIM_10_FR_PMSI"
+      },
+      {
+        "name": "system",
+        "valueUri": "https://smt.esante.gouv.fr/terminologie-cim-10"
+      },
+      {
+        "name": "version",
+        "valueString": "2025-01-01"
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "inactive"
+          },
+          {
+            "name": "value",
+            "valueBoolean": false
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "parent"
+          },
+          {
+            "name": "value",
+            "valueCode": "J40-J47"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "J45.0"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "J45.1"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "J45.8"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "J45.9"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "fr-FR"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+              "code": "preferredForLanguage"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Asthme"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,784 @@
+{
+  "status_code": 200,
+  "body": {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "code",
+        "valueCode": "195967001"
+      },
+      {
+        "name": "display",
+        "valueString": "asthme"
+      },
+      {
+        "name": "name",
+        "valueString": "module français SNOMED CT"
+      },
+      {
+        "name": "system",
+        "valueUri": "http://snomed.info/sct"
+      },
+      {
+        "name": "version",
+        "valueString": "http://snomed.info/sct/11000315107/version/20260621"
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "inactive"
+          },
+          {
+            "name": "value",
+            "valueBoolean": false
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "parent"
+          },
+          {
+            "name": "value",
+            "valueCode": "50043002"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "1388270004"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "225057002"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "233678006"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "233679003"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "1388281001"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "195977004"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "2360001000004109"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "401000119107"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "10692761000119107"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "409663006"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "233691007"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "370220003"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "55570000"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "445427006"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "266361008"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "72301000119103"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "707444001"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "93432008"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "405944004"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "10742121000119104"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "370218001"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "281239006"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "427603009"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "1290026000"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "370221004"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "92807009"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "57607007"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "370219009"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "child"
+          },
+          {
+            "name": "value",
+            "valueCode": "389145006"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "sufficientlyDefined"
+          },
+          {
+            "name": "value",
+            "valueBoolean": false
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "effectiveTime"
+          },
+          {
+            "name": "value",
+            "valueString": "20040731"
+          }
+        ]
+      },
+      {
+        "name": "property",
+        "part": [
+          {
+            "name": "code",
+            "valueCode": "moduleId"
+          },
+          {
+            "name": "value",
+            "valueCode": "900000000000207008"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Airway hyperreactivity"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en-x-sctlang-90000000-00005090-07"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+              "code": "preferredForLanguage",
+              "display": "Preferred For Language"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Asthma"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en-x-sctlang-90000000-00005080-04"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+              "code": "preferredForLanguage",
+              "display": "Preferred For Language"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Asthma"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000003001",
+              "display": "Fully specified name"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Asthma (disorder)"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Asthmatic"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "BHR - Bronchial hyperreactivity"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Bronchial asthma"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Bronchial hyperreactivity"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Bronchial hyperresponsiveness"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Bronchial hypersensitivity"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "en"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "Hyperreactive airway disease"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "fr-x-sctlang-10031000-315102"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+              "code": "preferredForLanguage",
+              "display": "Preferred For Language"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "asthme"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "fr"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+              "code": "preferredForLanguage"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "asthme"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "fr"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "asthme bronchique"
+          }
+        ]
+      },
+      {
+        "name": "designation",
+        "part": [
+          {
+            "name": "language",
+            "valueCode": "fr"
+          },
+          {
+            "name": "use",
+            "valueCoding": {
+              "system": "http://snomed.info/sct",
+              "code": "900000000000013009",
+              "display": "Synonym"
+            }
+          },
+          {
+            "name": "value",
+            "valueString": "hyperréactivité bronchique"
+          }
+        ]
+      }
+    ]
+  }
+}
