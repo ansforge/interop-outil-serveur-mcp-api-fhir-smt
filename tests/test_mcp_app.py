@@ -76,6 +76,23 @@ async def test_lookup_tool(app_for):
 
     assert result["display"] == "Asthme"
     assert transport.last.url.params["code"] == "J45"
+    # Par défaut, toutes les propriétés sont demandées
+    assert transport.last.url.params.get_list("property") == ["*"]
+
+
+@pytest.mark.anyio
+async def test_lookup_tool_restricts_properties(app_for):
+    app, transport = app_for(lambda r: fixture_response("lookup_cim10_J45"))
+
+    await call(
+        app,
+        "smt_lookup",
+        system=CIM10,
+        code="J45",
+        properties=["inclusionNote", "parent"],
+    )
+
+    assert transport.last.url.params.get_list("property") == ["inclusionNote", "parent"]
 
 
 @pytest.mark.anyio

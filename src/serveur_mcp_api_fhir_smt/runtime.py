@@ -67,10 +67,16 @@ class ServerRuntime:
         system: str,
         code: str,
         version: str | None = None,
+        properties: list[str] | None = None,
         display_language: str | None = None,
     ) -> dict[str, Any]:
+        # Sans `property`, le serveur ne renvoie qu'un sous-ensemble des propriétés
         result = self.service.lookup(
-            system=system, code=code, version=version, display_language=display_language
+            system=system,
+            code=code,
+            version=version,
+            properties=properties or ["*"],
+            display_language=display_language,
         )
         return result.model_dump()
 

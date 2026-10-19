@@ -104,6 +104,13 @@ DisplayLanguage = Annotated[
     str | None,
     Field(description="Langue des libellés, ex. 'fr' (facultatif)"),
 ]
+Properties = Annotated[
+    list[str] | None,
+    Field(
+        description="Propriétés à renvoyer, ex. ['typeActe', 'inclusionNote'] "
+        "(facultatif ; par défaut, toutes les propriétés du concept)"
+    ),
+]
 TextFilter = Annotated[
     str | None,
     Field(description="Filtre textuel sur les libellés, ex. 'asthme' (facultatif)"),
@@ -307,7 +314,8 @@ def create_mcp_app(
         description=(
             "Détail d'un code via CodeSystem/$lookup : libellé préféré, désignations "
             "(synonymes, langues), propriétés (parents, enfants, statut actif ou "
-            "inactif…).\n\n"
+            "inactif, notes d'inclusion, type d'acte CCAM…). Toutes les propriétés "
+            "sont renvoyées, sauf si `properties` en restreint la liste.\n\n"
             "QUAND L'UTILISER : vérifier ce que désigne un code connu, afficher ses "
             "synonymes, savoir s'il est inactif. Si le code n'existe pas, renvoie "
             "found=false avec un message (pas une erreur).\n\n"
@@ -321,12 +329,14 @@ def create_mcp_app(
         system: System,
         code: Code,
         version: Version = None,
+        properties: Properties = None,
         display_language: DisplayLanguage = None,
     ) -> dict[str, Any]:
         args: dict[str, Any] = {
             "system": system,
             "code": code,
             "version": version,
+            "properties": properties,
             "display_language": display_language,
         }
         return _backend("lookup", args, lambda: runtime.lookup(**args))
