@@ -13,10 +13,15 @@ L'utilisateur a lancé ce skill avec: $ARGUMENTS
 Si `$ARGUMENTS` est vide, demandez à l'utilisateur ce qu'il souhaite analyser. Si une expression ECL ou un SCTID (identifiant de concept SNOMED CT) est fourni, passez directement à l'étape suivante. Intentions courantes des experts :
 
 - **Exécuter ou affiner une requête ECL** : l'utilisateur dispose d'une requête ECL et souhaite l'exécuter ou l'améliorer
+- **Evaluer la modélisation d'un concept** : inspecter les parents et les relations non héirarchiques d'un concept ou d'un ensemble de concepts
 - **Comparer les éditions** : vérifier le contenu de l'édition française par rapport à la version internationale, ou comparer les versions d’une même édition
 - **Retracer les ancêtres ou les descendants** : chaînes complètes d’ancêtres et de descendants, et pas seulement un niveau
-- **Identifier les problèmes de qualité terminologique** : synonymes en double,  concepts inactifs dans des jeux de valeurs actifs
+- **Identifier les problèmes de qualité terminologique** : synonymes en double, inconsistance dans les libellés ou les modélisations, concepts inactifs dans des jeux de valeurs actifs
 - **Valider un jeu de valeurs** : vérifier que tous les codes d'un jeu de valeurs proposé sont actifs et que leur display est en français
+
+## Contexte
+L'édition française est publiée annuellement (juin) et se base sur l'édition internationale de mai précédente.
+Invite l'utilisateur à utiliser le Request Management Portal (https://rmp.ihtsdotools.org/fr) s'il souhaite effectuer une demande d'évolution du contenu SNOMED CT (ajout, modification, inactivation).
 
 ## Comment procéder
 
@@ -25,6 +30,12 @@ Transmet la reqûete ECL directement à `smt_expand`. Utilise d’abord `summary
 - Privilégie `<<` (descendant ou soi-même) plutôt que `<`, sauf si le concept racine lui-même doit être exclu
 - Utilisez `MINUS` pour exclure les sous-arborescences indésirables plutôt que de gérer des listes d’exclusion
 - Par défaut utilise l'édition française sauf si l'édition internationale est explicitement citée. Affiche dans ton résultat quelle édition et version tu as utilisé
+- Vérifie toujours les codes que tu proposes lors d'une correction ou amélioration
+
+### Evaluer la modélisation d'un concept
+Utilise `snomed_lookup` pour obtenir un résumé des parents, des relations non hiérarchiques et des libellés. À mettre en évidence :
+- Si le concept a plusieurs parents et si ceux-ci sont cliniquement cohérents
+- Toute reltion non hiérarchique plus générale que prévu compte tenu de la position du concept dans la hiérarchie
 
 ### Comparaison des éditions
 Utilise `smt_list_terminologies` pour répertorier les éditions disponibles. Lors de la comparaison :
@@ -37,6 +48,7 @@ Utilise `smt_get_ancestors` ou `smt_get_descendants`. Pour les chaînes complèt
 Recherche :
 - Les synonymes qui confondent des sens cliniquement distincts (e.g. un PT et un synonyme acceptable qui inversent le sens clinique)
 - Les synonymes en double
+- Les inconsistances de formulation entre différents concepts
 - Des jeux de valeurs contenant des codes inactifs (à valider à l’aide de `smt_validate_code` sur le jeu de valeurs)
 
 ### Validation d'un jeu de valeurs

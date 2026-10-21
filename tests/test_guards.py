@@ -18,11 +18,13 @@ from serveur_mcp_api_fhir_smt.guards import (
     RollingRateLimiter,
     TraversalTracker,
     add_large_result_warning,
+    check_ecl,
     check_pagination_depth,
     clamp_page_size,
 )
 
 CIM10 = "https://smt.esante.gouv.fr/terminologie-cim-10"
+SNOMED_FR_ECL = "http://snomed.info/sct/11000315107?fhir_vs=ecl/"
 
 
 class FakeClock:
@@ -43,6 +45,54 @@ def test_guard_errors_are_tool_errors():
     assert issubclass(GuardError, ToolError)
     assert issubclass(RateLimitError, GuardError)
     assert issubclass(BackendUnavailableError, GuardError)
+
+
+# ── Filtrage ECL ────────────────────────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    "ecl",
+    [
+        "<<404684003",
+        " << 138875005 ",
+        "<71388002",
+        "<<404684003:*=*",
+        "<<105590001.127489000",
+        "<<404684003:{{+HISTORY}}",
+        "(<<64572001:116676008=<<49755003) MINUS (<<64572001:116676008=<<4147007)",
+    ],
+)
+def test_check_ecl_blocks_expensive_patterns(ecl: str):
+    with pytest.raises(GuardError, match=r"\[E_QUERY_BLOCKED\]"):
+        check_ecl(SNOMED_FR_ECL + ecl)
+
+
+def test_check_ecl_sees_through_escaping():
+    with pytest.raises(GuardError, match=r"\[E_QUERY_BLOCKED\]"):
+        check_ecl(SNOMED_FR_ECL + "&lt;&lt;404684003")
+    with pytest.raises(GuardError, match=r"\[E_QUERY_BLOCKED\]"):
+        check_ecl("http://snomed.info/sct?fhir_vs=ecl/%3C%3C404684003")
+
+
+@pytest.mark.parametrize(
+    "ecl",
+    [
+        "<<195967001",
+        "<<404684003:363698007=<<39607008",
+        "<<50043002:[0..0]363698007=*",
+        "<<64572001:116676008=(<<49755003 MINUS <<4147007)",
+    ],
+)
+def test_check_ecl_allows_scoped_queries(ecl: str):
+    check_ecl(SNOMED_FR_ECL + ecl)
+
+
+def test_zero_cardinality_on_root_is_configurable():
+    ecl = SNOMED_FR_ECL + "<<404684003:[0..0]363698007=*"
+
+    with pytest.raises(GuardError, match=r"\[E_QUERY_BLOCKED\].*\[0\.\.0\]"):
+        QueryGuards().check_ecl(ecl)
+    QueryGuards(block_zero_cardinality_ecl=False).check_ecl(ecl)
 
 
 # ── Parcours niveau par niveau ──────────────────────────────────────────

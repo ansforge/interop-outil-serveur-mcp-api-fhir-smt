@@ -96,6 +96,26 @@ def test_list_resources_paginates_catalog(runtime_for):
     ]
 
 
+def test_list_resources_filters_by_status(runtime_for):
+    bundle = {
+        "resourceType": "Bundle",
+        "entry": [
+            {"resource": {"url": "https://vs.example/a", "status": "active"}},
+            {"resource": {"url": "https://vs.example/b", "status": "retired"}},
+            {"resource": {"url": "https://vs.example/c", "status": "active"}},
+            {"resource": {"url": "https://vs.example/d", "status": "draft"}},
+        ],
+    }
+    runtime, _ = runtime_for(lambda r: httpx.Response(200, json=bundle))
+
+    page = runtime.list_resources("ValueSet", status="active", count=1)
+
+    assert page["status"] == "active"
+    assert page["total"] == 2
+    assert page["returned"] == 1
+    assert runtime.list_resources("ValueSet")["total"] == 4
+
+
 def test_server_health(runtime_for):
     metadata = {
         "resourceType": "CapabilityStatement",

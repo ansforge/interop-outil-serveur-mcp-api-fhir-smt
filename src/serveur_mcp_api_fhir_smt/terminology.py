@@ -24,6 +24,7 @@ from .http_client import HttpClient
 logger = logging.getLogger(__name__)
 
 ResourceType = Literal["CodeSystem", "ValueSet", "ConceptMap"]
+PublicationStatus = Literal["active", "draft", "retired", "unknown"]
 
 _ELEMENTS: dict[str, str] = {
     "CodeSystem": "url,version,name,title,status,content,count",
@@ -145,11 +146,13 @@ class TerminologyCatalog:
         url: str | None = None,
         source: str | None = None,
         target: str | None = None,
+        status: PublicationStatus | None = None,
     ) -> list[CatalogEntry]:
         """Filtre le catalogue.
 
         `query` : tous les mots doivent apparaître dans le titre, le nom ou l'URL
-        (casse et accents ignorés). `url`, `source`, `target` : égalité exacte.
+        (casse et accents ignorés). `url`, `source`, `target`, `status` : égalité
+        exacte.
         """
         words = _tokens(query) if query else []
         results = []
@@ -159,6 +162,8 @@ class TerminologyCatalog:
             if source and entry.source != source:
                 continue
             if target and entry.target != target:
+                continue
+            if status and entry.status != status:
                 continue
             if words:
                 haystack = set(

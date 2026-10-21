@@ -10,13 +10,18 @@ L'utilisateur a lancé ce skill avec : $ARGUMENTS
 
 ## Premièrement clarifier l'intention
 
-Si `$ARGUMENTS` est vide ou ambigu, pose une courte question pour clarifier. Ne demande pas si l'intention est suffisamment claire pour continuer ("tous les types d'asthme" ou "ce code est-il valide : 73211009" sont suffisamment clairs). Intentions courantes :
+Si `$ARGUMENTS` est vide ou ambigu, pose une courte question pour clarifier. Ne demande pas si l'intention est suffisamment claire pour continuer ("tous les types d'asthme" ou "ce code est-il valide : 73211009" sont suffisamment clairs). Si un code est fourni sans Terminologie, demande toujours de confirmer la Terminologie. Intentions courantes :
 
 - **Trouver un concept** : l’utilisateur dispose d’un terme et souhaite obtenir le code du concept correspondant ainsi que ses détails
 - **Explorer les sous-types** : l’utilisateur souhaite connaître ce qui se trouve sous un concept dans une Terminologie (e.g. tous les types d’asthme)
 - **Valider un code** : l'utilisateur dispose d'un code et souhaite vérifier qu’il est actif et correct
 - **Vérifier la subsomption** : l'utilisateur souhaite savoir si un concept clinique est un sous-type d’un autre
 - **Parcourir la hiérarchie** : l'utilisateur souhaite voir où se situe un concept et ce qui l’entoure
+
+## Contexte
+### SNOMED CT
+L'édition française est publiée annuellement (juin) et se base sur l'édition internationale de mai précédente.
+Invite l'utilisateur à utiliser le Request Management Portal (https://rmp.ihtsdotools.org/fr) s'il souhaite effectuer une demande d'évolution du contenu SNOMED CT (ajout, modification, inactivation).
 
 ## Comment procéder
 

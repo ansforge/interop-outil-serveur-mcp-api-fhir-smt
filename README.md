@@ -184,6 +184,7 @@ Dans l'ordre où un appel les rencontre :
 
 | Garde-fou | Valeur | Code d'erreur |
 |---|---|---|
+| Filtrage ECL (`smt_expand` avec `value_set_url`) : refus des motifs SNOMED CT trop coûteux ou non pris en charge par le serveur FHIR. L'URL est déséchappée (HTML, encodage URL) avant contrôle | - | `E_QUERY_BLOCKED` (propose une sous-hiérarchie ou l'outil adapté) |
 | Parcours niveau par niveau : enfants des enfants (`smt_get_children`) ou parents des parents (`smt_get_parents`) | 10 codes distincts / minute, par sens | `E_RECURSIVE_TRAVERSAL` (propose `smt_get_descendants` ou `smt_get_ancestors`) |
 | Profondeur de pagination : position maximale atteignable en paginant | `offset` < 1 000 | `E_PAGINATION_DEPTH_EXCEEDED` |
 | Taille de page : concepts renvoyés par appel | `count` ≤ 100, plafonné sans erreur | - |
@@ -285,6 +286,7 @@ Règles à respecter :
 - **Description et paramètres en français**, lus par le modèle et affichés aux utilisateurs : ce que fait l'outil, puis « QUAND L'UTILISER » et « PAS POUR », pour l'orienter vers le bon outil. Chaque paramètre a une `Field(description=...)`. Réutilisez les types partagés en tête de module (`System`, `Code`, `Version`, `Offset`, `Count20`…).
 - **Outils en lecture seule** : `annotations=_READ_ONLY_ANNOTATIONS` et `structured_output=True`.
 - **Garde-fous propres à l'outil**, appelés avant `_backend` :
+  - URL de ValueSet implicite pouvant contenir de l'ECL : `guards.check_ecl(value_set_url)` ;
   - pagination : `guards.check_pagination_depth(offset)` et `guards.clamp_page_size(count)`, en mettant la valeur plafonnée dans `args` ;
   - navigation d'un niveau dans une hiérarchie : `guards.check_traversal("down" | "up", system, code)` ;
   - résultat potentiellement volumineux : `guards.add_large_result_warning(...)` dans l'appel, pour l'avertissement.

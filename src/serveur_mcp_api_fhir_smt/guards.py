@@ -1,19 +1,21 @@
 """Garde-fous appliqués avant et après les appels à l'API FHIR du SMT.
 
 Protections, dans l'ordre où un appel les rencontre :
-  1. Détection des parcours niveau par niveau — enfants des enfants, ou parents
+  1. Filtrage des expressions ECL — refuse les motifs SNOMED CT connus pour être
+     trop coûteux ou non pris en charge
+  2. Détection des parcours niveau par niveau — enfants des enfants, ou parents
      des parents, au lieu d'une seule requête de descendants ou d'ancêtres
-  2. Profondeur de pagination — `offset` limité aux premiers résultats
+  3. Profondeur de pagination — `offset` limité aux premiers résultats
      (MAX_PAGINATION_DEPTH)
-  3. Taille de page — nombre de concepts par appel ramené au plafond
+  4. Taille de page — nombre de concepts par appel ramené au plafond
      (MAX_PAGE_SIZE)
-  4. Cache des réponses — un appel identique récent n'interroge pas le SMT
-  5. Coupe-circuit — suspend les appels quand le SMT est surchargé (429, 503)
+  5. Cache des réponses — un appel identique récent n'interroge pas le SMT
+  6. Coupe-circuit — suspend les appels quand le SMT est surchargé (429, 503)
      ou défaillant (erreurs 5xx ou délais dépassés répétés), avec un appel test
      et des pauses allongées ; bloque les appels si la panne dure
-  6. Limitation de débit — fenêtre glissante, pour tout le processus
-  7. Plafond de concurrence — empêche les rafales d'appels parallèles
-  8. Avertissement sur résultat volumineux — signale un total au-delà d'un seuil
+  7. Limitation de débit — fenêtre glissante, pour tout le processus
+  8. Plafond de concurrence — empêche les rafales d'appels parallèles
+  9. Avertissement sur résultat volumineux — signale un total au-delà d'un seuil
      (LARGE_RESULT_WARNING_THRESHOLD), sans bloquer
 
 En stdio, chaque utilisateur lance son propre processus : ces limites s'appliquent
@@ -28,15 +30,18 @@ from __future__ import annotations
 
 import copy
 import logging
+import re
 import threading
 from collections import OrderedDict, deque
 from collections.abc import Callable
 from time import monotonic
 from typing import Any, Literal
+from urllib.parse import unquote
 
 from mcp.server.mcpserver.exceptions import ToolError
 
 from . import config
+from .fhir import unescape_ecl
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +71,120 @@ class BackendBlockedError(GuardError):
     """Appels bloqués jusqu'au redémarrage : le SMT ne répond plus."""
 
 
-# ── 1. Parcours niveau par niveau ───────────────────────────────────────
+# ── 1. Filtrage des expressions ECL ─────────────────────────────────────
+
+
+# Racines de hiérarchies SNOMED CT trop vastes pour être interrogées sans
+# restriction. Chaque racine ajoutée ici produit automatiquement les motifs
+# refusés (attributs génériques, notation pointée, racine seule).
+_EXPENSIVE_ROOTS: dict[str, tuple[str, str, str]] = {
+    # identifiant : (label, taille approximative, exemple plus restreint)
+    "138875005": (
+        "la racine de SNOMED CT",
+        "~400 000 concepts",
+        "<<64572001 pour les maladies",
+    ),
+    "404684003": (
+        "toutes les constatations cliniques",
+        "~150 000 concepts",
+        "<<50043002 pour les maladies respiratoires",
+    ),
+    "71388002": (
+        "toutes les procédures",
+        "~70 000 concepts",
+        "<<387713003 pour les interventions chirurgicales",
+    ),
+    "123037004": (
+        "toutes les structures corporelles",
+        "~50 000 concepts",
+        "<<80891009 pour les structures du cœur",
+    ),
+    "105590001": (
+        "toutes les substances",
+        "~40 000 concepts",
+        "<<410942007 pour les drogues et médicaments",
+    ),
+}
+
+_ROOT_IDS_ALT = "|".join(_EXPENSIVE_ROOTS)
+
+
+def _build_blocked_ecl_patterns() -> list[tuple[re.Pattern[str], str]]:
+    """Construit les motifs refusés : règles structurelles et racines coûteuses."""
+    patterns: list[tuple[re.Pattern[str], str]] = [
+        (
+            re.compile(r"\{\{\s*\+\s*HISTORY", re.IGNORECASE),
+            "Les suppléments d'historique ({{+HISTORY}}) ne sont pas pris en charge. "
+            "Pour un code inactif, utilisez smt_snomed_get_inactivation (raison "
+            "d'inactivation et remplacements)",
+        ),
+        (
+            re.compile(r"\)\s*MINUS\s*\(", re.IGNORECASE),
+            "Un MINUS entre deux expressions entre parenthèses dépasse le délai sur "
+            "les grands ensembles. Placez le MINUS dans la valeur d'un attribut : "
+            "<<X:{attr=(<<A MINUS <<B)} plutôt que (<<X:attr=<<A) MINUS "
+            "(<<X:attr=<<B).",
+        ),
+    ]
+    for cid, (concept, size, example) in _EXPENSIVE_ROOTS.items():
+        patterns += [
+            (
+                re.compile(rf"<<?\s*{cid}\s*:\s*\*\s*=\s*\*"),
+                f"Une contrainte d'attribut générique (*=*) sur {concept} "
+                f"({size}) est trop coûteuse. Restreignez d'abord à une "
+                "sous-hiérarchie.",
+            ),
+            (
+                re.compile(rf"<<?\s*{cid}\s*\."),
+                f"La notation pointée sur {concept} ({size}) est trop coûteuse. "
+                "Restreignez d'abord à une sous-hiérarchie.",
+            ),
+            (
+                re.compile(
+                    rf"^http://snomed\.info/sct(?:/[^?]*)?\?fhir_vs=ecl/\s*<<?\s*{cid}\s*$"
+                ),
+                f"L'expansion de toute la hiérarchie {concept} ({size}) est trop "
+                f"large. Restreignez d'abord à une sous-hiérarchie (par exemple "
+                f"{example}).",
+            ),
+        ]
+    return patterns
+
+
+# Chaque entrée : (motif, message renvoyé au modèle)
+BLOCKED_ECL_PATTERNS: list[tuple[re.Pattern[str], str]] = _build_blocked_ecl_patterns()
+
+# Cardinalité [0..0] sous une racine coûteuse : trouver les concepts *sans* un
+# attribut oblige à parcourir toute la hiérarchie. Désactivable dans `config.py`.
+ZERO_CARDINALITY_ECL_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+    (
+        re.compile(rf"<<?\s*(?:{_ROOT_IDS_ALT})\b.*\[0\s*\.\.\s*0\]"),
+        "Une cardinalité [0..0] sous la racine d'une grande hiérarchie oblige à "
+        "parcourir tous ses concepts pour trouver ceux sans l'attribut : la requête "
+        "dépassera le délai. Restreignez d'abord à une sous-hiérarchie, par exemple "
+        "<<50043002:[0..0]363698007=* (troubles respiratoires sans 363698007 "
+        "|Finding site|).",
+    ),
+]
+
+
+def check_ecl(
+    value_set_url: str,
+    patterns: list[tuple[re.Pattern[str], str]] = BLOCKED_ECL_PATTERNS,
+) -> None:
+    """Refuse une URL de ValueSet implicite dont l'ECL correspond à un motif coûteux.
+
+    L'URL est d'abord déséchappée (HTML puis encodage URL) pour qu'un client qui
+    échappe `<<` ne contourne pas le filtre.
+    """
+    url = unquote(unescape_ecl(value_set_url.strip()))
+    for pattern, message in patterns:
+        if pattern.search(url):
+            logger.warning("Expression ECL refusée : %r", url)
+            raise GuardError(f"[E_QUERY_BLOCKED] {message}")
+
+
+# ── 2. Parcours niveau par niveau ───────────────────────────────────────
 
 
 _TRAVERSAL_HINTS: dict[Direction, tuple[str, str, str]] = {
@@ -134,7 +252,7 @@ class TraversalTracker:
             steps.append((now, key))
 
 
-# ── 2. Profondeur de pagination ─────────────────────────────────────────
+# ── 3. Profondeur de pagination ─────────────────────────────────────────
 
 
 def check_pagination_depth(offset: int, max_pagination_depth: int) -> None:
@@ -152,7 +270,7 @@ def check_pagination_depth(offset: int, max_pagination_depth: int) -> None:
         )
 
 
-# ── 3. Taille de page ───────────────────────────────────────────────────
+# ── 4. Taille de page ───────────────────────────────────────────────────
 
 
 def clamp_page_size(requested: int, max_page_size: int) -> int:
@@ -163,7 +281,7 @@ def clamp_page_size(requested: int, max_page_size: int) -> int:
     return capped
 
 
-# ── 4. Cache des réponses ───────────────────────────────────────────────
+# ── 5. Cache des réponses ───────────────────────────────────────────────
 
 
 class ResponseCache:
@@ -207,7 +325,7 @@ class ResponseCache:
                 self._entries.popitem(last=False)
 
 
-# ── 5. Coupe-circuit ────────────────────────────────────────────────────
+# ── 6. Coupe-circuit ────────────────────────────────────────────────────
 
 
 class CircuitBreaker:
@@ -359,7 +477,7 @@ class CircuitBreaker:
         logger.warning("Coupe-circuit ouvert pour %.0f s", seconds)
 
 
-# ── 6. Limitation de débit ──────────────────────────────────────────────
+# ── 7. Limitation de débit ──────────────────────────────────────────────
 
 
 class RollingRateLimiter:
@@ -400,7 +518,7 @@ class RollingRateLimiter:
             self._timestamps.append(now)
 
 
-# ── 7. Plafond de concurrence ───────────────────────────────────────────
+# ── 8. Plafond de concurrence ───────────────────────────────────────────
 
 
 class ConcurrencyLimiter:
@@ -417,7 +535,7 @@ class ConcurrencyLimiter:
         self._semaphore.release()
 
 
-# ── 8. Avertissement sur résultat volumineux ────────────────────────────
+# ── 9. Avertissement sur résultat volumineux ────────────────────────────
 
 
 def add_large_result_warning(
@@ -461,8 +579,12 @@ class QueryGuards:
         backend_failure_threshold: int = config.BACKEND_FAILURE_THRESHOLD,
         backend_cooldown_seconds: float = config.BACKEND_COOLDOWN_SECONDS,
         backend_block_after_seconds: float = config.BACKEND_BLOCK_AFTER_SECONDS,
+        block_zero_cardinality_ecl: bool = config.BLOCK_ZERO_CARDINALITY_ECL,
         clock: Callable[[], float] = monotonic,
     ) -> None:
+        self._ecl_patterns = BLOCKED_ECL_PATTERNS + (
+            ZERO_CARDINALITY_ECL_PATTERNS if block_zero_cardinality_ecl else []
+        )
         self.max_page_size = max_page_size
         self.max_pagination_depth = max_pagination_depth
         self.large_result_warning_threshold = large_result_warning_threshold
@@ -482,6 +604,9 @@ class QueryGuards:
         self._concurrency = ConcurrencyLimiter(max_concurrent_requests)
 
     # Avant l'appel
+
+    def check_ecl(self, value_set_url: str) -> None:
+        check_ecl(value_set_url, self._ecl_patterns)
 
     def check_traversal(self, direction: Direction, system: str, code: str) -> None:
         self._traversal.check(direction, system, code)

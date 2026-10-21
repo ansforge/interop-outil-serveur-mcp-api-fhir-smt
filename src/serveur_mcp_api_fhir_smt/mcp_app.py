@@ -22,7 +22,7 @@ from . import config
 from .guards import GuardError, QueryGuards
 from .http_client import HttpRequestError
 from .runtime import ServerRuntime
-from .terminology import ResourceType
+from .terminology import PublicationStatus, ResourceType
 
 logger = logging.getLogger(__name__)
 
@@ -76,9 +76,25 @@ RÈGLES DE QUALITE :
 - N'invente jamais un code, un libellé, une propriété ou n'importe quelle autre valeur.
 - Les alignement ont un sens (source vers target), n'utilise jamais un alignement \
     dans l'autre sens.
+- Ne déduis jamais quelque chose de la métadonnée "content" d'une Terminologie.
+- Ne devine jamais la Terminologie à laquelle appartient un code, demande toujours à \
+    l'utilisateur de clarifier.
+- Ne modifie jamais le terme d'un code.
 
-Les résultats sont fournis à des fins terminologiques uniquement et ne remplacent \
-pas une décision clinique.
+RÈGLES DE STYLE :
+- Désigne le module français SNOMED CT comme l'édition française SNOMED CT.
+- Désigne les identifiants de type http://id.who.int/icd/entity/X comme des \
+    identifiants de la fondation qui sont des identifiants alternatifs aux codes MMS.
+- Ne traduis jamais toi-même une notion anglaise qui pourrait être attaché à un \
+    concept (e.g. le nom d'une hiérarchie).
+- Ecris les libellés des concepts en italique pour les distinguer du reste du texte.
+- Ajoute un avertissement à la fin de ta réponse pour les questions sur les choix ou \
+    la création de jeux de valeurs indiquant qu'il est nécessaire de se référer aux \
+    spécifications du CI-SIS pour un cas d'usage d'interopérabilité en France.
+
+Les résultats sont fournis à des fins terminologiques uniquement et ne remplacent pas
+ une décision clinique. L'ANS est le point de contact de référence
+ (ans-terminologies@esante.gouv.fr).
 """
 
 # ── Types de paramètres partagés ────────────────────────────────────────
@@ -127,6 +143,13 @@ Search = Annotated[
     Field(
         description="Mots à rechercher dans le titre, le nom ou l'URL (casse et "
         "accents ignorés), ex. 'cim 10', 'loinc', 'specialite'"
+    ),
+]
+Status = Annotated[
+    PublicationStatus | None,
+    Field(
+        description="Statut de publication : 'active', 'draft' (brouillon), "
+        "'retired' (retiré) ou 'unknown' (facultatif ; par défaut, tous les statuts)"
     ),
 ]
 
@@ -223,6 +246,7 @@ def create_mcp_app(
         resource_type: ResourceType,
         *,
         search: str | None,
+        status: PublicationStatus | None,
         offset: int,
         count: int,
         source: str | None = None,
@@ -232,6 +256,7 @@ def create_mcp_app(
             "query": search,
             "source": source,
             "target": target,
+            "status": status,
             "offset": offset,
             "count": guards.clamp_page_size(count),
         }
@@ -258,27 +283,35 @@ def create_mcp_app(
     )
     def smt_list_terminologies(
         search: Search = None,
+        status: Status = None,
         offset: Offset = 0,
         count: Count20 = 20,
     ) -> dict[str, Any]:
-        return _list("CodeSystem", search=search, offset=offset, count=count)
+        return _list(
+            "CodeSystem", search=search, status=status, offset=offset, count=count
+        )
 
     @mcp.tool(
         title="Lister les jeux de valeurs",
         description=(
             "Recherche les jeux de valeurs (ValueSet) publiés sur le serveur, par "
             "exemple les JDV du NOS. Renvoie leur URL canonique, à passer en "
-            "`value_set_url` à smt_expand ou smt_validate_code."
+            "`value_set_url` à smt_expand ou smt_validate_code. `total` donne le "
+            "nombre de résultats : combiné à `status`, il permet de compter par "
+            "exemple les jeux de valeurs actifs en un seul appel (count=1)."
         ),
         annotations=_READ_ONLY_ANNOTATIONS,
         structured_output=True,
     )
     def smt_list_value_sets(
         search: Search = None,
+        status: Status = None,
         offset: Offset = 0,
         count: Count20 = 20,
     ) -> dict[str, Any]:
-        return _list("ValueSet", search=search, offset=offset, count=count)
+        return _list(
+            "ValueSet", search=search, status=status, offset=offset, count=count
+        )
 
     @mcp.tool(
         title="Lister les alignements",
@@ -295,6 +328,7 @@ def create_mcp_app(
         search: Search = None,
         source: Annotated[str | None, Field(description="URL source exacte")] = None,
         target: Annotated[str | None, Field(description="URL cible exacte")] = None,
+        status: Status = None,
         offset: Offset = 0,
         count: Count20 = 20,
     ) -> dict[str, Any]:
@@ -303,6 +337,7 @@ def create_mcp_app(
             search=search,
             source=source,
             target=target,
+            status=status,
             offset=offset,
             count=count,
         )
@@ -349,7 +384,8 @@ def create_mcp_app(
             "fourni (ValueSet/$validate-code). Avec `display`, vérifie aussi le "
             "libellé. Renvoie result=true/false, le libellé officiel et un message "
             "explicatif.\n\n"
-            "QUAND L'UTILISER : contrôler un code issu de données existantes, ou un "
+            "QUAND L'UTILISER : confirmer la présence d'un code ou un couple "
+            "code/libellé dans une Terminologie ou un jeu de valeurs, contrôler un "
             "couple code/libellé avant de l'utiliser."
         ),
         annotations=_READ_ONLY_ANNOTATIONS,
@@ -445,7 +481,9 @@ def create_mcp_app(
             "associations historiques REPLACED BY, SAME AS, POSSIBLY EQUIVALENT TO et "
             "ALTERNATIVE. Si le serveur ne fournit pas la raison, inactivation_reason "
             "vaut « Raison d'inactivation non gérée en FHIR ». Un concept actif ou "
-            "inconnu renvoie une erreur explicite.\n\n"
+            "inconnu renvoie une erreur explicite. Si le serveur ne fournit pas de "
+            "remplacement, indique que soit il n'existe pas de remplacement soit ce "
+            "remplacement n'est pas encore géré par FHIR.\n\n"
             "QUAND L'UTILISER : un code SNOMED CT issu de données existantes est "
             "inactif (smt_lookup indique inactive=true) et il faut savoir "
             "pourquoi, et par quoi le remplacer.\n\n"
@@ -518,6 +556,8 @@ def create_mcp_app(
                 "smt_list_terminologies) ou `value_set_url` (jeu de valeurs, voir "
                 "smt_list_value_sets)."
             )
+        if value_set_url:
+            guards.check_ecl(value_set_url)
         guards.check_pagination_depth(offset)
         args: dict[str, Any] = {
             "system": None if value_set_url else system,

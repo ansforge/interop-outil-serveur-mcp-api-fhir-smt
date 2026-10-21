@@ -105,6 +105,18 @@ async def test_expand_requires_system_or_value_set(app_for):
 
 
 @pytest.mark.anyio
+async def test_expand_blocks_expensive_ecl(app_for):
+    app, transport = app_for(lambda r: httpx.Response(500))
+
+    with pytest.raises(ToolError, match=r"\[E_QUERY_BLOCKED\]"):
+        await app.call_tool(
+            "smt_expand",
+            {"value_set_url": "http://snomed.info/sct?fhir_vs=ecl/<<404684003"},
+        )
+    assert transport.requests == []
+
+
+@pytest.mark.anyio
 async def test_expand_count_is_capped(app_for):
     app, transport = app_for(
         lambda r: fixture_response("expand_cim10_asthme"), max_page_size=5

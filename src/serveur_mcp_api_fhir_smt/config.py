@@ -38,6 +38,9 @@ CATALOG_MAX_PAGES = 50
 # En stdio, chaque utilisateur lance son propre processus : ces limites
 # s'appliquent par utilisateur.
 
+# Filtrage ECL : refuse aussi les cardinalités [0..0] sous la racine d'une grande
+# hiérarchie SNOMED CT (les autres motifs coûteux sont toujours refusés)
+BLOCK_ZERO_CARDINALITY_ECL = True
 # Limitation de débit sur fenêtre glissante (requêtes réellement envoyées au SMT ;
 # les réponses servies par le cache ne comptent pas)
 RATE_LIMIT_CALLS = 30

@@ -7,7 +7,7 @@ from typing import Any
 from .capabilities import probe_server
 from .fhir import ExpandResult, TerminologyService
 from .http_client import HttpClient
-from .terminology import ResourceType, TerminologyCatalog
+from .terminology import PublicationStatus, ResourceType, TerminologyCatalog
 
 # Filtres FHIR (compose.include.filter) de navigation dans la hiérarchie. Ils sont
 # définis par la spécification et pris en charge pour toute terminologie
@@ -43,16 +43,23 @@ class ServerRuntime:
         url: str | None = None,
         source: str | None = None,
         target: str | None = None,
+        status: PublicationStatus | None = None,
         offset: int = 0,
         count: int = 20,
     ) -> dict[str, Any]:
         matches = self.catalog.search(
-            resource_type, query=query, url=url, source=source, target=target
+            resource_type,
+            query=query,
+            url=url,
+            source=source,
+            target=target,
+            status=status,
         )
         page = matches[offset : offset + count]
         return {
             "resource_type": resource_type,
             "query": query,
+            "status": status,
             "total": len(matches),
             "offset": offset,
             "returned": len(page),
