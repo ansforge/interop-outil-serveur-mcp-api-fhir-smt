@@ -1,5 +1,5 @@
 ---
-name: snomed-expert
+name: snomed-advanced
 description: Framework avancé SNOMED CT pour les terminologistes, spécialistes en informatique clinique et les éditeurs SNOMED CT. Utilise le quand l'utilisateur veut écrire ou lancer une requête ECL, comparer des éditions SNOMED CT, retracer la chaîne des ancêtres/descendants, identifier un problème de qualité dans la SNOMED CT ou valider un jeu de valeurs.
 argument-hint: requête ECL, SCTID, ou ce que vous souhaitez analyser
 ---
