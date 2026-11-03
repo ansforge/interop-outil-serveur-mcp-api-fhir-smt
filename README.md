@@ -1,6 +1,6 @@
-# Serveur MCP des API FHIR du SMT
+# [BETA] Serveur MCP des API FHIR du SMT
 
-Serveur [MCP](https://modelcontextprotocol.io/) donnant accès aux Terminologies du [Serveur Multi-Terminologies (SMT)](https://smt.esante.gouv.fr/) de l'Agence du Numérique en Santé, via son API FHIR R4.
+Serveur [MCP](https://modelcontextprotocol.io/) en **beta** donnant accès aux Terminologies du [Serveur Multi-Terminologies (SMT)](https://smt.esante.gouv.fr/) de l'Agence du Numérique en Santé, via son API FHIR R4.
 
 Le serveur fonctionne de la même façon pour toutes les Terminologies, jeux de valeurs et alignements accessibles via les API FHIR du SMT.
 
@@ -13,7 +13,7 @@ Ce serveur s'inspire de celui réalisé par la SNOMED Int. ([snowstorm-mcp-serve
 
 ## Sommaire
 
-- [Serveur MCP des API FHIR du SMT](#serveur-mcp-des-api-fhir-du-smt)
+- [\[BETA\] Serveur MCP des API FHIR du SMT](#beta-serveur-mcp-des-api-fhir-du-smt)
   - [Sommaire](#sommaire)
   - [Installation](#installation)
     - [Prérequis](#prérequis)
