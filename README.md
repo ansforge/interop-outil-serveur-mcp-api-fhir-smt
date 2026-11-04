@@ -130,7 +130,7 @@ Les serveurs MCP s'utilisent dans GitHub Copilot Chat, en mode **Agent** (VS Cod
 
    ```json
    {
-     "servers": {
+     "mcpServers": {
        "smt": {
          "type": "stdio",
          "command": "/home/<vous>/.local/bin/uvx",
@@ -139,6 +139,20 @@ Les serveurs MCP s'utilisent dans GitHub Copilot Chat, en mode **Agent** (VS Cod
      }
    }
    ```
+
+  Si votre politique d'entreprise ne vous permet pas d'installer le serveur via `uv` vous pouvez passer par Python :
+
+  ```json
+  {
+     "mcpServers": {
+       "smt": {
+         "type": "stdio",
+         "command": "/home/<vous>/.local/bin/uvx",
+         "args": ["--from", "git+https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt", "python", "-m", "serveur-mcp-api-fhir-smt"]
+       }
+     }
+   }
+  ```
 
    Sous Windows, doublez les barres obliques inverses : `"C:\\Users\\<vous>\\.local\\bin\\uvx.exe"`.
 
