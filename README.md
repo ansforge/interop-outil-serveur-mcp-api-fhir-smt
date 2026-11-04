@@ -32,6 +32,7 @@ Ce serveur s'inspire de celui réalisé par la SNOMED Int. ([snowstorm-mcp-serve
     - [3. La déclaration MCP (`mcp_app.py`)](#3-la-déclaration-mcp-mcp_apppy)
     - [4. Les tests](#4-les-tests)
     - [5. La documentation](#5-la-documentation)
+  - [Feuille de route](#feuille-de-route)
   - [Licence](#licence)
 
 
@@ -106,26 +107,44 @@ Vérification : `claude mcp list` dans un terminal, ou `/mcp` dans Claude Code, 
 
 ### Paramétrer VS Code
 
-Les serveurs MCP s'utilisent dans GitHub Copilot Chat, en mode **Agent**.
+Les serveurs MCP s'utilisent dans GitHub Copilot Chat, en mode **Agent** (VS Code 1.99 ou plus récent).
 
-- Pour un seul projet : créez le fichier `.vscode/mcp.json` à la racine du projet.
-- Pour tous vos projets : lancez la commande *MCP: Open User Configuration* (Ctrl+Shift+P / Cmd+Shift+P).
+1. **Repérez le chemin absolu de `uvx`** dans un terminal :
 
-Puis ajoutez :
+   ```bash
+   which uvx          # macOS / Linux / WSL, par ex. /home/<vous>/.local/bin/uvx
+   ```
 
-```json
-{
-  "servers": {
-    "smt": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt", "serveur-mcp-api-fhir-smt"]
-    }
-  }
-}
-```
+   ```powershell
+   where.exe uvx      # Windows, par ex. C:\Users\<vous>\.local\bin\uvx.exe
+   ```
 
-Cliquez sur *Start*, qui s'affiche au-dessus de `"smt"` dans le fichier, puis vérifiez que les outils `smt_…` sont cochés dans le sélecteur d'outils du chat.
+   VS Code ne lit pas toujours le `PATH` de votre terminal : l'installateur de uv place `uvx` dans `~/.local/bin`, qui n'est ajouté au `PATH` que par `~/.bashrc` ou `~/.profile`. Avec un simple `"command": "uvx"`, VS Code peut alors échouer avec `spawn uvx ENOENT`. Le chemin absolu évite ce problème.
+
+2. **Ouvrez le fichier de configuration** :
+   - pour un seul projet : créez `.vscode/mcp.json` à la racine du projet ;
+   - pour tous vos projets : commande *MCP: Open User Configuration* (Ctrl+Shift+P / Cmd+Shift+P) ;
+   - **VS Code connecté à WSL, SSH ou un conteneur** : utilisez *MCP: Open Remote User Configuration*, ou `.vscode/mcp.json` dans le projet distant. Le serveur est alors lancé **dans l'environnement distant** : uv doit y être installé, et le chemin de l'étape 1 doit être celui obtenu dans un terminal de cet environnement (`which uvx` dans WSL, pas `where.exe uvx` sous Windows).
+
+3. **Ajoutez le serveur `smt`** en remplaçant le chemin par celui de l'étape 1. Si le fichier contient déjà un bloc `servers`, ajoutez-y seulement l'entrée `smt` :
+
+   ```json
+   {
+     "servers": {
+       "smt": {
+         "type": "stdio",
+         "command": "/home/<vous>/.local/bin/uvx",
+         "args": ["--from", "git+https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt", "serveur-mcp-api-fhir-smt"]
+       }
+     }
+   }
+   ```
+
+   Sous Windows, doublez les barres obliques inverses : `"C:\\Users\\<vous>\\.local\\bin\\uvx.exe"`.
+
+4. **Démarrez le serveur** : cliquez sur *Start*, qui s'affiche au-dessus de `"smt"` dans le fichier (ou *MCP: List Servers → smt → Start Server*). Le premier démarrage peut prendre quelques dizaines de secondes (voir [Dépannage](#dépannage)).
+
+5. **Vérifiez** : *MCP: List Servers* affiche `smt` à l'état *Running*, et les outils `smt_…` sont cochés dans le sélecteur d'outils (icône 🔧) du chat en mode Agent. En cas d'erreur : *MCP: List Servers → smt → Show Output*.
 
 ### Mise à jour
 
@@ -135,7 +154,8 @@ uv réutilise la version en cache. Pour récupérer la dernière version publié
 
 | Symptôme | Solution |
 |---|---|
-| `spawn uvx ENOENT` ou `uvx` introuvable | Remplacez `"uvx"` dans `command` par son chemin absolu (`which uvx` sous macOS / Linux, `where uvx` sous Windows), puis redémarrez l'outil |
+| `spawn uvx ENOENT` ou `uvx` introuvable | L'outil IA ne trouve pas `uvx` dans son `PATH` (fréquent avec VS Code, en particulier sous WSL, et quand uv a été installé alors que l'outil était ouvert). Remplacez `"uvx"` dans `command` par son chemin absolu (`which uvx` sous macOS / Linux / WSL, `where.exe uvx` sous Windows), puis redémarrez le serveur |
+| VS Code + WSL : `spawn uvx ENOENT` alors que `uvx --version` fonctionne dans le terminal | Le serveur VS Code de WSL démarre sans lire `~/.bashrc`, donc sans `~/.local/bin` dans son `PATH`. Utilisez le chemin absolu obtenu par `which uvx` **dans WSL** (par ex. `/home/<vous>/.local/bin/uvx`). Si uv n'est installé que sous Windows, installez-le aussi dans WSL |
 | Le serveur ne démarre pas ou dépasse le délai au premier lancement | Lancez la commande `uvx --from git+https://github.com/ansforge/interop-outil-serveur-mcp-api-fhir-smt serveur-mcp-api-fhir-smt` dans un terminal pour précharger le cache. Le serveur attend alors en silence : quittez avec Ctrl+C, puis redémarrez l'outil |
 | Échec du téléchargement depuis GitHub | Derrière un proxy, définissez `HTTPS_PROXY`. Avec un certificat racine d'entreprise, ajoutez aussi `UV_NATIVE_TLS=1` |
 | Consulter les journaux | Claude Desktop : `~/Library/Logs/Claude/mcp-server-smt.log` (macOS) ou `%APPDATA%\Claude\logs\mcp-server-smt.log` (Windows). VS Code : *MCP: List Servers → smt → Show Output* |
@@ -313,6 +333,12 @@ Règles à respecter :
 - la section « CHOIX DE L'OUTIL » de `INSTRUCTIONS` dans `mcp_app.py`, lue par le modèle à la connexion ;
 
 Vérifiez enfin l'ensemble avec `./scripts/check.sh`, puis testez l'outil en conditions réelles avec MCP Inspector ou Claude Code (voir [Développement](#développement)).
+
+## Feuille de route
+La liste ci-dessous présente les améliorations prévues dans le futur :
+- Publication d'une image Docker
+- Utilisation des Batch FHIR
+- Ajout de skills d'assistants avancés sur d'autres Terminologies
 
 ## Licence
 
